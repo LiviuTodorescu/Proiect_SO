@@ -1,7 +1,0 @@
-Initial snapshot:
-dir3 - Last modified: Tue Apr  2 16:49:43 2024
-textul4 - Last modified: Tue Apr  2 16:49:43 2024
-dir2 - Last modified: Tue Apr  2 16:58:06 2024
-afdasfdsd.txt - Last modified: Tue Apr  2 16:58:06 2024
-text2.txt - Last modified: Tue Apr  2 16:49:27 2024
-text1.txt - Last modified: Tue Apr  2 16:49:20 2024

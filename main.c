@@ -22,6 +22,16 @@ void update_snapshot(const char *dir_path) {
         exit(EXIT_FAILURE);
     }
 
+    // Deschidem fișierul snapshot.txt pentru a scrie
+    char snapshot_file_path[512];
+    snprintf(snapshot_file_path, sizeof(snapshot_file_path), "%s/snapshot.txt", dir_path);
+    FILE *fp = fopen(snapshot_file_path, "w");
+    if (fp == NULL) {
+        perror("fopen");
+        closedir(dir);
+        exit(EXIT_FAILURE);
+    }
+
     struct dirent *entry;
     while ((entry = readdir(dir)) != NULL) {
         // Ignorăm intrările implicite "." și ".."
@@ -36,43 +46,22 @@ void update_snapshot(const char *dir_path) {
         struct stat entry_stat;
         if (lstat(entry_path, &entry_stat) == -1) {
             perror("lstat");
+            fclose(fp);
             closedir(dir);
             exit(EXIT_FAILURE);
         }
 
-        // Salvăm metadatele în snapshot
-        struct Metadata snapshot[MAX_ENTRIES];
-        int snapshot_count = 0;
-        strcpy(snapshot[snapshot_count].name, entry->d_name);
-        snapshot[snapshot_count].last_modified = entry_stat.st_mtime;
-        snapshot[snapshot_count].mode = entry_stat.st_mode;
+        // Scriem metadatele în fișierul snapshot.txt
+        fprintf(fp, "%s - Last modified: %s", entry->d_name, ctime(&entry_stat.st_mtime));
 
-        snapshot_count++;
-
-        // Dacă intrarea este un director, creăm un snapshot în acesta recursiv
+        // Dacă intrarea este un director, actualizăm snapshot-ul pentru acesta recursiv
         if (S_ISDIR(entry_stat.st_mode)) {
             update_snapshot(entry_path);
         }
-
-        // Scriem captura într-un fișier în directorul curent
-        char snapshot_file_path[512];
-        snprintf(snapshot_file_path, sizeof(snapshot_file_path), "%s/snapshot.txt", dir_path);
-        FILE *fp = fopen(snapshot_file_path, "w");
-        if (fp == NULL) {
-            perror("fopen");
-            exit(EXIT_FAILURE);
-        }
-
-        // Scriem captura în fișier
-        fprintf(fp, "Snapshot for directory: %s\n", dir_path);
-        for (int i = 0; i < snapshot_count; i++) {
-            fprintf(fp, "%s - Last modified: %s", snapshot[i].name, ctime(&snapshot[i].last_modified));
-        }
-
-        // Închidem fișierul
-        fclose(fp);
     }
 
+    // Închidem fișierul și directorul
+    fclose(fp);
     closedir(dir);
 }
 
@@ -85,7 +74,7 @@ int main(int argc, char *argv[]) {
     // Directorul de monitorizat
     const char *dir_path = argv[1];
 
-    // Apelăm funcția pentru a crea snapshot-ul în fiecare director
+    // Apelăm funcția pentru a crea snapshot-ul în directorul curent și în toate subdirectoarele sale
     update_snapshot(dir_path);
 
     return EXIT_SUCCESS;

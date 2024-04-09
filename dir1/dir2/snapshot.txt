@@ -1,2 +1,5 @@
-Snapshot for directory: dir1/dir2
+afdasfdsd.txt - Last modified: Tue Apr  2 16:58:06 2024
+snapshot.txt - Last modified: Tue Apr  9 09:03:24 2024
+text2.txt - Last modified: Tue Apr  2 16:49:27 2024
+cfdsfadf.txt - Last modified: Tue Apr  9 09:02:36 2024
 text1.txt - Last modified: Tue Apr  2 16:49:20 2024
