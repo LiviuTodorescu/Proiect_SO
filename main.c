@@ -6,7 +6,7 @@
 #include <time.h>
 
 #define MAX_ENTRIES 1000
-
+#define MAX_ARGS 10
 // Structura pentru stocarea metadatelor 
 struct Metadata {
     char name[256];
@@ -65,16 +65,21 @@ void update_snapshot(const char *dir_path) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <directory>\n", argv[0]);
+    if (argc < 2 || argc > MAX_ARGS + 1) {
+        fprintf(stderr, "Usage: %s <directory1> <directory2> ... <directory%d>\n", argv[0], MAX_ARGS);
         return EXIT_FAILURE;
     }
 
-
-    const char *dir_path = argv[1];
-
-    // Apelăm funcția pentru a crea snapshot-ul în directorul curent și în toate subdirectoarele sale
-    update_snapshot(dir_path);
+    // Parcurgem toate argumentele și apelăm funcția update_snapshot pentru directoarele valide
+    for (int i = 1; i < argc; i++) {
+        struct stat st;
+        if (stat(argv[i], &st) == -1 || !S_ISDIR(st.st_mode)) {
+            fprintf(stderr, "argumentul nu este director: %s\n", argv[i]);
+            continue;
+        }
+        printf("Updatez snapshot ul pentru director: %s\n", argv[i]);
+        update_snapshot(argv[i]);
+    }
 
     return EXIT_SUCCESS;
 }
