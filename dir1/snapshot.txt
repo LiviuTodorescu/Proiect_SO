@@ -1,0 +1,2 @@
+Snapshot for directory: dir1
+dir2 - Last modified: Mon Apr  8 06:19:44 2024

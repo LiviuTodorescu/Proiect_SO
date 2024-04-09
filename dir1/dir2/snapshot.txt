@@ -1,0 +1,2 @@
+Snapshot for directory: dir1/dir2
+text1.txt - Last modified: Tue Apr  2 16:49:20 2024
