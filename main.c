@@ -11,7 +11,7 @@
 struct Metadata {
     char name[256];
     time_t last_modified;
-    mode_t mode;
+   // mode_t mode;
 };
 
 
@@ -38,10 +38,9 @@ void update_snapshot(const char *dir_path) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;
 
-
         char entry_path[512];
         snprintf(entry_path, sizeof(entry_path), "%s/%s", dir_path, entry->d_name);
-
+                
 
         struct stat entry_stat;
         if (lstat(entry_path, &entry_stat) == -1) {
@@ -51,7 +50,7 @@ void update_snapshot(const char *dir_path) {
             exit(EXIT_FAILURE);
         }
 
-        fprintf(fp, "%s - Last modified: %s", entry->d_name, ctime(&entry_stat.st_mtime));
+        fprintf(fp, "%s - Last modified: %s", entry_path ,ctime(&entry_stat.st_mtime));
 
 
         if (S_ISDIR(entry_stat.st_mode)) {
